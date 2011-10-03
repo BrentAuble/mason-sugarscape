@@ -1,3 +1,3 @@
-libjar=lib/jfreechart-1.0.1.jar:lib/jcommon-1.0.0.jar:lib/quaqua-colorchooser-only.jar:lib/itext-1.4.5.jar
+lib=lib/jfreechart-1.0.13.jar:lib/jcommon-1.0.16.jar:lib/quaqua-colorchooser-only.jar:lib/itext-2.1.5.jar
 
-java -classpath .:$libjar sim.app.sugarscape.SugarscapeWithUIHigh -file conf/anim2-3.conf
+java -classpath .:$lib sim.app.sugarscape.SugarscapeWithUIHigh -file conf/anim2-3.conf
