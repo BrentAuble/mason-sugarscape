@@ -9,7 +9,6 @@ See the file "LICENSE" for more information
 import sim.engine.Schedule;
 import sim.engine.Steppable;
 import sim.engine.SimState;
-import sim.util.Bag;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -31,7 +30,7 @@ import java.util.Iterator;
 public class Statistics implements Steppable {
 
 	/* how many segments in the Lorenz curve */
-	public static int      LORENZ_CURVE_SEGMENTS       = 10;
+	public static final int      LORENZ_CURVE_SEGMENTS       = 10;
 	public static float    LORENZ_CURVE_FACTOR         = 1f/LORENZ_CURVE_SEGMENTS;
     Sugarscape model;
     StringBuffer output;
@@ -64,7 +63,7 @@ public class Statistics implements Steppable {
           output.append(",total_pollution,non_zero_sites");
       }
       output.append("\n");
-      if (outmode==model.PRINT) {
+      if (outmode==Sugarscape.PRINT) {
 
           doOutput(output);
           return;
@@ -74,8 +73,8 @@ public class Statistics implements Steppable {
           FileWriter fw = new FileWriter(f);
           bw = new BufferedWriter(fw);
       } catch (Exception e) {
-          e.printStackTrace();
-          this.outmode = model.PRINT;
+          // ToDo: Replace this e.printStackTrace() with logging;
+          this.outmode = Sugarscape.PRINT;
       }
       output.append("run,time,gini,agents_replaced,alive_agents,vision,metabolism_sugar,metabolism_spice");
       if (model.print_trades) {
@@ -91,7 +90,7 @@ public class Statistics implements Steppable {
       doOutput(output);
     }
       public void doOutput(StringBuffer line) {
-          if (outmode==model.PRINT) {
+          if (outmode==Sugarscape.PRINT) {
               System.out.print(line);
           } else {
              try {
@@ -116,6 +115,7 @@ public class Statistics implements Steppable {
             return area;
       }
       //generate core statistics
+    @Override
       public void step(SimState state) {
                output.delete(0, output.length());
                float lower_left_x;
