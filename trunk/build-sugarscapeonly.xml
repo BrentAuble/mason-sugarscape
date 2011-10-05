@@ -1,29 +1,31 @@
-<project name="sugarscape1" default="generic_javac_sugarscape" basedir=".">
+<project name="sugarscape1.2" default="generic_javac_sugarscape" basedir=".">
+
     <property name="basedir" value="." />
+    <property name="sim.app.sugarscape" value="sim/app/sugarscape"/>
 
-    <!--ignore 3d part of source namespace such as sim.display3d-->
-    <property name="sim.app.sugarscape"   value="sim/app/sugarscape"/>
-
-    <property name="build" value="."/>
-    <property name="lib"   value="lib"/>
+    <property name="build" value="build"/>
         
     <path id="classpath">
 	 <fileset dir="lib">
-             <include name="*.jar"/>
+             <include name="**/*.jar"/>
          </fileset>
     </path>
 
- 
+    <pathconvert pathsep=":" property="jarfiles" refid="classpath"/>
 
-
+    <path id="source">                                                                                  
+         <fileset dir="sim/app/sugarscape">
+             <include name="**/*.java"/>
+         </fileset>
+    </path> 
 	
     <target name = "mac-build">
          <echo>Building using Mac OS javac in Java.VM.framework/Versions/CurrentJDKL...</echo>
-         <javac destdir="${build}"
-	        srcdir= "${sim.app.sugarscape}"
+         <javac classpath="${jarfiles}"
+                destdir="${build}"
+	        srcdir="${sim.app.sugarscape}"
                 debuglevel="lines,vars,source"
                 debug="true"  
-                classpathref="classpath"
                 fork="YES"
                 executable="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Commands/javac">
          </javac>
@@ -31,11 +33,7 @@
 	
      <target name = "generic-build">
          <echo>Compiling using system javac...</echo>
-         <javac destdir="${build}"
-                srcdir= "${sim.app.sugarscape}"
-                debuglevel="lines,vars,source"
-                debug="true"
-                classpathref="classpath" >
+         <javac classpath="${jarfiles}" destdir="${build}" srcdir="${sim.app.sugarscape}" debug="true" debuglevel="lines,vars,source" includeantruntime="false">
          </javac>
      </target>
      
@@ -44,13 +42,26 @@
             <fileset dir="${build}" includes="**/*.class" />
         </delete>
     </target>
-	
-    <target name="mac" depends="clean,mac-build">
-        <echo>Mac OS build complete.</echo>
+
+    <target name="copydirsforjar">
+        <copy todir="build/conf">
+            <fileset dir="conf" includes="**/*" />
+            <fileset dir="start" includes="**/*" />
+        </copy>
     </target>
 
-    <target name="generic_javac_sugarscape" depends="clean,generic-build">
-        <echo>javac build complete.</echo>
+    <target name="mac" depends="clean,copydirsforjar,mac-build,ms-jar">
+        <echo>Mac OS build mason-sugarscape.jar complete.</echo>
     </target>
-    
+
+    <target name="generic_javac_sugarscape" depends="clean,copydirsforjar,generic-build,ms-jar">
+        <echo>mason-sugarscape.jar build complete.</echo>
+    </target>
+
+    <target name="ms-jar">
+        <jar destfile="sugarscape.jar" excludes="**/.svn">
+            <fileset dir="build"/>
+        </jar>
+    </target> 
+   
 </project>
