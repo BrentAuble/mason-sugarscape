@@ -1,0 +1,73 @@
+<project name="sugarscape1" default="generic_javac_sugarscape" basedir=".">
+    <property name="basedir" value="." />
+
+    <!--ignore 3d part of source namespace such as sim.display3d-->
+    <property name="sim.display"    value="sim/display"/>
+    <property name="sim.field"      value="sim/field"/>
+    <property name="sim.portrayal"  value="sim/portrayal"/>
+    <property name="sim.util"       value="sim/util"/>
+    <property name="sim.engine"     value="sim/engine"/>	
+    <property name="ec.util"    value="ec/util"/>
+
+    <property name="build" value="build"/>
+    <property name="lib"   value="lib"/>
+        
+    <path id="classpath">
+	 <fileset dir="lib">
+             <include name="*.jar"/>
+         </fileset>
+         <fileset dir="${ec.util}">
+             <include name="*.class"/>
+         </fileset>
+    </path>
+	
+    <target name = "mac-build">
+         <echo>Building using Mac OS javac in Java.VM.framework/Versions/CurrentJDKL...</echo>
+         <javac destdir="${build}"
+	        srcdir= "${ec.util}:${sim.display}:${sim.engine}:${sim.field}:${sim.portrayal}:${sim.util}"
+                debuglevel="lines,vars,source"
+                debug="true"  
+                classpathref="classpath"
+                fork="YES"
+                executable="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Commands/javac">
+         </javac>
+     </target>
+	
+     <target name = "generic-build">
+         <echo>Compiling using system javac...</echo>
+         <javac destdir="${build}"
+                srcdir= "${ec.util}:${sim.display}:${sim.engine}:${sim.field}:${sim.portrayal}:${sim.util}"
+                debuglevel="lines,vars,source"
+                debug="true"
+                classpathref="classpath" >
+         </javac>
+     </target>
+     
+    <target name="clean">
+        <delete verbose="FALSE" failonerror="false">
+            <fileset dir="${build}" includes="**/*.class" />
+        </delete>
+    </target>
+	
+    <target name="mac" depends="clean,copyresourcesforjar,mac-build,mason-jar">
+        <echo>Mac OS build complete.</echo>
+    </target>
+
+    <target name="generic_javac_sugarscape" depends="clean,copyresourcesforjar,generic-build,mason-jar">
+        <echo>javac build complete.</echo>
+    </target>
+
+ <target name="copyresourcesforjar">
+        <copy todir="build/sim">
+            <fileset dir="sim" excludes="**/*.class" />
+        </copy>
+    </target>
+
+
+    <target name="mason-jar">
+        <jar destfile="mason.jar">
+            <fileset dir="${build}" excludes="**/.svn"/>
+        </jar>
+    </target>
+    
+</project>
