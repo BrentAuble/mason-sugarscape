@@ -10,17 +10,12 @@ import sim.display.GUIState;
 import sim.display.Display2D;
 import sim.display.Console;
 import sim.display.Controller;
-import sim.portrayal.grid.SparseGridPortrayal2D;
-import sim.portrayal.grid.FastObjectGridPortrayal2D;
 import sim.portrayal.grid.ObjectGridPortrayal2D;
 import sim.engine.SimState;
-import sim.util.gui.SimpleColorMap;
 
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -28,6 +23,7 @@ import javax.swing.JFrame;
 import org.jfree.chart.ChartPanel;
 
 import ec.util.ParameterDatabase;
+import java.io.InputStream;
 
 public class SugarscapeWithUIHigh extends GUIState {
     public Display2D display;
@@ -36,9 +32,6 @@ public class SugarscapeWithUIHigh extends GUIState {
     public Console console;
     public Charts charts;
 
-    //SparseGridPortrayal2D agentsPortrayal = new SparseGridPortrayal2D();
-    //SparseGridPortrayal2D scapePortrayal = new SparseGridPortrayal2D();
-    //SparseGridPortrayal2D pollutionPortrayal = new SparseGridPortrayal2D();
     ObjectGridPortrayal2D agentsPortrayal = new ObjectGridPortrayal2D();
     ObjectGridPortrayal2D scapePortrayal = new ObjectGridPortrayal2D();
     ObjectGridPortrayal2D pollutionPortrayal = new ObjectGridPortrayal2D();
@@ -53,17 +46,15 @@ public class SugarscapeWithUIHigh extends GUIState {
     {
         ParameterDatabase parameters = null;
         for(int x=0;x<args.length-1;x++)
-                    if (args[x].equals("-file"))
-                        {
-                        try
-                            {
-                            parameters=new ParameterDatabase(
-                                    new File(args[x+1]).getAbsoluteFile());//,
-                                    //args);
-                                    //System.out.println(parameters.toString());
-                            }catch(IOException ex){ex.printStackTrace();}
+            if (args[x].equals("-file")) {
+                try {
+                    InputStream is = Class.forName(sim.app.sugarscape.SugarscapeWithUIHigh.class.getCanonicalName()).getClassLoader().getResourceAsStream(args[x+1]);
+                    parameters=new ParameterDatabase(is);
+                    } catch(Exception ex) {
+                        ex.printStackTrace(System.err);
+                    }
                         break;
-                        }
+            }
         if (parameters == null)
             {
             throw new RuntimeException("No parameter file was provided.  You need to include it with the arguments:\n\n\t-file myparameters.conf");
@@ -78,11 +69,11 @@ public class SugarscapeWithUIHigh extends GUIState {
 
     public SugarscapeWithUIHigh(SimState state) { super(state); }
 
-    public static String getName() { return "Sugarscape v1.0"; }
+    public static String getName() { return "Sugarscape v1.2"; }
 
     public static Object getInfo()
     {
-        return "<H2>Sugarscape 1.0</H2><p>Version 1.0 of MASON Sugarscape";
+        return "<H2>MASON Sugarscape</H2><p>Version 1.2 of MASON Sugarscape";
     }
 
     public void quit()
@@ -109,8 +100,6 @@ public class SugarscapeWithUIHigh extends GUIState {
         chartFrame.setVisible(false);
         controller.unregisterFrame(chartFrame);   // unregister previous frame
         addChartPanel( controller, (Sugarscape)state );   // make new frame and register it
-
-
     }
 
 public void setupPortrayals() {

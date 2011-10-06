@@ -15,14 +15,14 @@ import sim.app.sugarscape.util.Logger;
 import sim.util.MutableInt2D;
 import sim.display.Display2D;
 
-import sim.display.Console;
 import ec.util.*;
 
 import javax.swing.JFrame;
-import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -32,6 +32,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import sim.display.Console;
 
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -201,9 +203,9 @@ public class Sugarscape extends SimState {
    public XYSeriesCollection evolution_metabolism_coll = new XYSeriesCollection(metabolism_series);
    public XYSeriesCollection culture_tag_coll = new XYSeriesCollection(culture_tag_series);
    public JFreeChart chart4, gini_chart, age_histo_chart, evolution_chart,
-    culture_tag_chart, trade_chart;
+                     culture_tag_chart, trade_chart;
    public boolean gini_chart_on, wealth_chart_on, population_chart_on,
-    age_chart_on, evolution_chart_on, culture_tag_chart_on, trade_chart_on;
+                  age_chart_on, evolution_chart_on, culture_tag_chart_on, trade_chart_on;
 
    public Sugarscape(ParameterDatabase _paramdb, long seed, int run) {
    /***************************************************************************
@@ -334,15 +336,11 @@ public class Sugarscape extends SimState {
        debug = paramDB.getBoolean(new Parameter("debug"), null, false);
        stats_rate = paramDB.getIntWithDefault(new Parameter("stats_rate"), null, 1);
        stats_start = paramDB.getIntWithDefault(new Parameter("stats_start"), null, 1);
-       String statistics_output = paramDB.getStringWithDefault(new Parameter("stats_start"), null,"print");
-       if (statistics_output.compareToIgnoreCase("print")==0) {
-           stats_out = PRINT;
-       } else if (statistics_output.compareToIgnoreCase("file")==0) {
+       String statistics_output = paramDB.getStringWithDefault(new Parameter("stats_out"), null,"print");
+       stats_out = PRINT;
+       if (statistics_output.compareToIgnoreCase("file")==0) {
            stats_out = FILE;
-       } else {
-           stats_out = PRINT;
-       }
-
+       } 
        chart_start = paramDB.getIntWithDefault(new Parameter("chart_start"), null, 1);
        chart_display = paramDB.getBoolean(new Parameter("chart_display"), null, false);
        chart_rate = paramDB.getIntWithDefault(new Parameter("chart_rate"), null, 1);
@@ -667,9 +665,10 @@ public class Sugarscape extends SimState {
 
       if (agents_file!=null) { //config file for setting up agents spatial config
         try {
-               File f = new File(agents_file);//AGENTS_PARAMS]);
-               FileReader fr = new FileReader(f);
-               BufferedReader br = new BufferedReader(fr);
+              InputStream is = Class.forName(sim.app.sugarscape.Sugarscape.class.getCanonicalName()).getClassLoader().getResourceAsStream(agents_file);
+              InputStreamReader ir = new InputStreamReader(is);
+              BufferedReader br = new BufferedReader(ir);
+              
                String line = br.readLine();
                int y = 0;
                int affiliation;
@@ -705,17 +704,17 @@ public class Sugarscape extends SimState {
       for (int a = 0; a < resources; a++) {
           rows.clear();
           try {
-                   File f = new File(terrain_files[a]);//TERRAIN]);
-                   FileReader fr = new FileReader(f);
-                   BufferedReader br = new BufferedReader(fr);
-                   String line = br.readLine();
-                   while (line !=null) {
-                       rows.add(line);
+              InputStream is = Class.forName(sim.app.sugarscape.Sugarscape.class.getCanonicalName()).getClassLoader().getResourceAsStream(terrain_files[a]);
+              InputStreamReader ir = new InputStreamReader(is);
+              BufferedReader br = new BufferedReader(ir);
+              String line = br.readLine();
+              while (line !=null) {
+                  rows.add(line);
                        line = br.readLine();
-                   }
-                 } catch (Exception e) {
-                     e.printStackTrace();
-                 }
+              }
+          } catch (Exception e) {
+               e.printStackTrace();
+          }
           int row_count = rows.size();
           int capacity;
           String max;
@@ -796,13 +795,14 @@ public class Sugarscape extends SimState {
           multi_metabolism_bins.step(this);
       }
 
+      //TO DO: Restore this
       if (logger!=null) {
-          MultiStep multi_logger = new MultiStep(logger, log_frequency, true);
+          MultiStep multi_logger = null; //new MultiStep(logger, log_frequency, true);
           //use order 4 along with statistics steppable
           //System.out.println("Logging "+ logger.grids.size() + " grids.");
           schedule.scheduleRepeating(Schedule.EPOCH, 4, multi_logger,1);
-          Thread t = new Thread(logger);
-          t.start();
+          //Thread t = new Thread(logger);
+          //t.start();
       }
       
        Steppable chart_updater = new Steppable() {
@@ -956,12 +956,10 @@ public class Sugarscape extends SimState {
                     steps = Integer.parseInt(args[x+1]);
                 } else if (args[x].equals("-file"))
                         {
-                        try
-                            {
-                            paramsdb=new ParameterDatabase(
-                                    new File(args[x+1]).getAbsoluteFile(),
-                                    args);
-                            }catch(IOException ex){ex.printStackTrace();}
+                        try {
+                            InputStream is = Class.forName(sim.app.sugarscape.Sugarscape.class.getCanonicalName()).getClassLoader().getResourceAsStream(args[x+1]);
+                            paramsdb=new ParameterDatabase(is);
+                        } catch(Exception ex) {ex.printStackTrace();}
                         break;
                         }
 
