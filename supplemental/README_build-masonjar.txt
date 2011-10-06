@@ -1,9 +1,20 @@
 The build-masonjar.xml file in this directory is used to build a jar that has all the required MASON and ECJ (ec.util) classes and resources to run Sugarscape.
 
 1.  Download MASON and ECJ.
-2.  Unpack ECJ and copy over the ec utility to the main MASON directory so that sim and ec directories are in the same directory.
-3.  remove ec/util/Code.java. 
-3.  Copy supplemental/build-masonjar.xml to that directory.
+2.  Unpack both, and from the ECJ root directory,
+
+2.1 remove ec/util/Code.java.
+2.2 copy supplemental/build-masonjar.xml to the root MASON directory.
+2.3 copy over the ec/util directory to the main MASON directory so that sim and ec directories are in the same directory.
+
+In Linux/Unix, that would be:
+
+tar -cf ecutil.tar ec/util
+cp ecutil.tar path-to-mason-dir
+cd path-to-mason-dir
+tar -xf ecutil.tar
+
+
 4.  Change to that directory and execute:
  
 ant -f build-masonjar.xml
