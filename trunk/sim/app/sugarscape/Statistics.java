@@ -29,9 +29,10 @@ import java.util.Iterator;
  */
 public class Statistics implements Steppable {
 
-	/* how many segments in the Lorenz curve */
-	public static final int      LORENZ_CURVE_SEGMENTS       = 10;
-	public static float    LORENZ_CURVE_FACTOR         = 1f/LORENZ_CURVE_SEGMENTS;
+    /* how many segments in the Lorenz curve */
+    public static final int      LORENZ_CURVE_SEGMENTS       = 10;
+    public static float          LORENZ_CURVE_FACTOR         = 1f/LORENZ_CURVE_SEGMENTS;
+    
     Sugarscape model;
     StringBuffer output;
     int outmode;
@@ -54,7 +55,7 @@ public class Statistics implements Steppable {
       tags = new int[model.culture_tags];
       output.append("run,time,gini,agents_born,alive_agents,avg_vision,avg_metabolism_sugar,avg_metabolism_spice");
       if (model.print_trades) {
-                       output.append(",trades,average_trade_price,total_trades");
+          output.append(",trades,average_trade_price,total_trades");
       }
       if (model.print_culture) {
           output.append(",blues,tags");
@@ -63,41 +64,28 @@ public class Statistics implements Steppable {
           output.append(",total_pollution,non_zero_sites");
       }
       output.append("\n");
-      if (outmode==Sugarscape.PRINT) {
-
-          doOutput(output);
-          return;
+      if (outmode==Sugarscape.FILE) {
+          File f = new File(System.currentTimeMillis()+".exp");
+          try {
+              FileWriter fw = new FileWriter(f);
+              bw = new BufferedWriter(fw);
+          } catch (Exception e) {
+              e.printStackTrace(System.err);
+              this.outmode = Sugarscape.PRINT;
+          }
       }
-      File f = new File("exp/"+System.currentTimeMillis()+".exp");
-      try {
-          FileWriter fw = new FileWriter(f);
-          bw = new BufferedWriter(fw);
-      } catch (Exception e) {
-          // ToDo: Replace this e.printStackTrace() with logging;
-          this.outmode = Sugarscape.PRINT;
-      }
-      output.append("run,time,gini,agents_replaced,alive_agents,vision,metabolism_sugar,metabolism_spice");
-      if (model.print_trades) {
-                       output.append(",trades,average_trade_price,total_trades,total_potential_trade_partners");
-      }
-      if (model.print_culture) {
-          output.append(",blues,tags");
-      }
-      if (model.pollution_enabled) {
-          output.append(",total_pollution,non_zero_sites");
-      }
-      output.append("\n");
       doOutput(output);
     }
-      public void doOutput(StringBuffer line) {
+    
+     public void doOutput(StringBuffer line) {
           if (outmode==Sugarscape.PRINT) {
               System.out.print(line);
           } else {
              try {
-              bw.write(line.toString());
-              bw.flush();
+                bw.write(line.toString());
+                bw.flush();
              } catch (Exception e) {
-                 e.printStackTrace();
+                  e.printStackTrace();
              }
           }
       }
@@ -115,7 +103,7 @@ public class Statistics implements Steppable {
             return area;
       }
       //generate core statistics
-    @Override
+
       public void step(SimState state) {
                output.delete(0, output.length());
                float lower_left_x;
@@ -251,7 +239,7 @@ public class Statistics implements Steppable {
                    output.append((double)(state.schedule.time()+1));
                    output.append(",");
                    //System.out.print(model.run+"," + (double)(state.schedule.time()));
-                   System.out.println("gini = " + gini);
+                   //System.out.println("gini = " + gini);
                    output.append(two_digit.format(1-(2*gini)));
                    output.append(",");
                    output.append(model.historical_agents);
@@ -321,7 +309,6 @@ public class Statistics implements Steppable {
                    }
                    output.append("\n");
                    doOutput(output);
-                   //run,time,gini,agents_replaced,alive_agents,avg_vision,avg_metabolism
             }
       }
 
