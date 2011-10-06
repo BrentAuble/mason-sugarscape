@@ -215,7 +215,7 @@ public class ResultsGrapher {
 
                        ArrayList run_y = nonzero.get(run);
                        ArrayList run_x = timezero.get(run);
-                       //System.out.print(run.intValue()+ " ");
+
                        int sz = run_y.size();
                        double total_y = 0d;
                        double total_x = 0d;
@@ -228,11 +228,6 @@ public class ResultsGrapher {
 
                        sweep_y[j][i] = y_avg;
                        sweep_x[j][i] = x_avg;
-                       //System.out.println(x_avg+" " +y_avg+" ");
-
-                       //System.out.println(run.intValue()+" "+ x_avg + " "+y_avg );
-                       //System.out.println (((int[])sweep_x[j].get(i))[sweep_map_xaxis]);
-
                    }
                    dual.sort(sweep_x[j], sweep_y[j]) ;
                    //System.out.println();

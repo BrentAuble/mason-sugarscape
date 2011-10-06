@@ -151,46 +151,12 @@ public class Charts {
                 true,
                 false);
             model.chart4 = chart4;
-
-            //CategoryDataset dataset1 = createDataset1();
             NumberAxis rangeAxis1 = new NumberAxis("Wealth");
             rangeAxis1.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-            //XYItemRenderer renderer1 = new XYItemRenderer();
-
-
-            //renderer1.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator());
-            //CategoryPlot subplot1 = new CategoryPlot((IntervalXYDataset)dataset, null, rangeAxis1, renderer1);
-            //XYPlot subplot1 = new XYPlot((IntervalXYDataset)model.dataset, rangeAxis1, null,  renderer1);
-            //ValueAxis yAxis = subplot1.getRangeAxis();
-            //yAxis.setRange(0,MAX_AGENT_VISION);
-            //subplot1.setDomainGridlinesVisible(true);
-            //XYPlot plot = chart4.getXYPlot();
-            //org.jfree.chart.plot.CombinedDomainXYPlot
-             //Axis domainAxis = new CategoryAxis("Bin");
             org.jfree.chart.axis.NumberAxis domainAxis = new NumberAxis("Bins");
             XYPlot plot = chart4.getXYPlot();
             XYItemRenderer renderer1 = plot.getRenderer();
             renderer1.setSeriesPaint(0, Color.MAGENTA);
-           //new CombinedDomainXYPlot(domainAxis);
-            //subplot1.setRangeAxisLocation(AxisLocation.BOTTOM_OR_LEFT);
-
-
-            //xy.setRenderer(1,renderer1);
-
-
-            //plot.add(subplot1, 1);
-
-            //XYItemRenderer renderer2 = new DefaultXYItemRenderer();
-            //ValueAxis yAxis = subplot1.getRangeAxis();
-
-            //XYPlot subplot2 = new XYPlot(gini_coeff, null, rangeAxis2, renderer2);
-
-
-            //JFreeChart chart = new JFreeChart("Wealth Distribution", plot);
-            //chart.getXYPlot();
-
-                    //xAxis.setFixedDimension(100);
-            //yAxis.setFixedDimension(12);
             return chart4;
     }
 

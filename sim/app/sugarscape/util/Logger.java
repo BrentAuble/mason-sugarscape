@@ -96,7 +96,7 @@ public class Logger implements Steppable, Runnable {
       //then pass to the filewriting queue handled by a separate thread
       int size = grids.size();
       Sugarscape sugar = (Sugarscape)state;
-      current_step = sugar.schedule.time();
+      current_step = sugar.schedule.getTime();
       for (int a = 0; a < size; a++) {
 
           Field field = (Field)grids.get(a);
