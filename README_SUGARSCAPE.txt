@@ -1,22 +1,18 @@
 ------------------------------------
-LAST MODIFIED:   30 Oct 2007
+LAST MODIFIED:   06 Oct 2011
 CREATED:         25 Nov 2006
 ------------------------------------
 
 This file describes how to install, run, and further develop the MASON Sugarscape implementation.
-Questions should be directed to tony.bigbee@gmail.com or the MASON interest list:
-https://listserv.gmu.edu/archives/mason-interest-l.html
+Questions should be directed to tony.bigbee@gmail.com
 
 Contents and source code are generally covered by the Academic Free License version 3.0, granted by either Sean Luke et al. (George Mason University) or Tony Bigbee.
 
 MASON Sugarscape homepage:
-http://web.mac.com/tony.bigbee/mason_sugarscape/MASON_Sugarscape.html
-
-The latest source code (via Subversion repository) and other information may be obtained via:
-https://mason-sugarscape.dev.java.net/source/browse/mason-sugarscape/trunk/
+http://code.google.com/p/mason-sugarscape/
 
 Thanks for the following for constructive comments, bug reports, and support:
-Claudio Cioffi-Revilla, Sean Luke, Joshua Epstein, Robert Axtell, Liviut Panait, Ann Palkovich, Randy Casstevens, Rafal Kicinger
+Amit Goel, Claudio Cioffi-Revilla, Sean Luke, Joshua Epstein, Robert Axtell, Liviut Panait, Ann Palkovich, Randy Casstevens, Rafal Kicinger.
 
 Contents
 -------------------------------------
@@ -40,7 +36,7 @@ The code contained in this distribution has several bug fixes and general improv
 
 [2] INSTALLATION
 
-Unpacking the .tar.gz file will create a new directory called mason_sugarscape_1.1.  The distribution includes all the MASON proper core classes and required third party .jar-based libraries in a subdirectory called lib.  If you want to use another version of MASON, you can copy the sim/app/sugarscape directory into another mason/sim/app directory.  Typically, you will also need to copy the [conf,start,ec,sweep] subdirectories, and the MASON Sugarscape also depends on some ECJ classes not supplied with the usual MASON 12 distribution.  
+Unpacking the latest distribution or checking out   The distribution includes all the MASON proper core classes and required third party .jar-based libraries in a subdirectory called lib.  If you want to use another version of MASON, you can copy the sim/app/sugarscape directory into another mason/sim/app directory.  Typically, you will also need to copy the [conf,start,ec,sweep] subdirectories, and the MASON Sugarscape also depends on some ECJ classes not supplied with the usual MASON 12 distribution.  
 
 The directories supplied in the distribution are:
 
@@ -51,24 +47,23 @@ ec    -->  ECJ utility java source code required by Sugarscape
 start -->  shell scripts and a sample .bat file for executing Sugarscape models
 sweep -->  Parameter ranges and steps that are swept given a supplied .conf file in conf/
 docs  -->  Acrobat (PDF) files of two papers
+supplemental -->  ant build script for compiling and creating mason.jar for MASON and ECJ 
 
 Note that additional files from ECJ in ec/util/ are included in this package that are not in the standard MASON distribution.  These classes are referenced in the MASON tutorials.
 
 The latest bleeding edge source code (Sugarscape only) is available using Subversion (svn) and going to:
-https://mason-sugarscape.dev.java.net/
+http://code.google.com/p/mason-sugarscape/source/list
 
-You will have to create an account on java.net to access the code via svn.  The site has instructions on how to use svn to obtain code.  All the modern IDEs have svn support, and I recommend their use.
 
 [3] BUILDING/COMPILING
 
 An Apache Ant build.xml file is supplied which will compile all the MASON core classes as well as the Sugarscape classes.  Ant is very powerful and is the recommended way to build MASON Sugarscape.
 Some operating systems, like Mac OS 10.x, include Ant, and it is easily used on the command line.  Simply change to the root MASON Sugarscape directory and execute:
 
-%ant
-or
-%/path/to/ant_binary
+% ant -f build-sugarscapeonly.xml
 
-and this will use the supplied build.xml.
+and this will build a consolidated jar file called sugarscape.jar.
+NOTE:  This process depends on having third party jars and mason.jar in lib/.  I have provided an ant script to build mason.jar, supplemental/README_build-masonjar.txt for precise instructions on building MASON 16 and ECJ.
 
 The default task, 'generic_javac_sugarscape', compiles all core MASON classes and all Sugarscape classes.  It does not compile the 3D classes in sim.display3d.*  .  Take a look at the beginning of the file and you will see exactly what is done.  The resulting classes are written to build/ 
 
@@ -77,16 +72,19 @@ You can change to another java compiler instead of the default one your OS confi
 The Apache Ant project homepage:
 http://ant.apache.org/
 
-
 [4] RUNNING
- This section assumes basic comptence with Java JVM invocation and shell or bat scripts.
+This section assumes basic comptence with Java JVM invocation and shell or bat scripts.
 
-Out of the box, the simulation outcomes described in GAS are runnable via shell scripts (for Linux/UNIX/Mac OS 10)  whose names match the simulation outcome of interest.  For Windows users, there is a sample .bat file.  
+Out of the box, the simulation outcomes described in GAS are runnable via shell scripts (for Linux/UNIX/Mac OS 10)  whose names match the simulation outcome of interest.  For Windows users, there is a sample .bat file. 
+
+NOTE:  At this moment, only start/anim2-3.sh and start/anim2-2.bat have the correct jar versions specified.  The other scripts need to be updated accordingly. 
+
+You should also be able to run Sugarscape inside an IDE just using the sugarscape.jar and lib/*.jar as the code has been modified to use resources rather files for configuration.
 
 So let's run a model based on one of the earlier outcomes.
 
 1.  cd to the root MASON Sugarscape directory
-2.  invoke start/anim2-2.sh (UNIX-based OS) or start/anim2-2.bat (WINDOWS)
+2.  invoke start/anim2-3.sh (UNIX-based OS) or start/anim2-2.bat (WINDOWS)
 3.  press the play button
 
 You'll notice that, for this outcome configuration, output goes to both graphical windows and the console/terminal.
