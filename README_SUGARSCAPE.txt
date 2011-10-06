@@ -77,6 +77,9 @@ This section assumes basic comptence with Java JVM invocation and shell or bat s
 
 Out of the box, the simulation outcomes described in GAS are runnable via shell scripts (for Linux/UNIX/Mac OS 10)  whose names match the simulation outcome of interest.  For Windows users, there is a sample .bat file. 
 
+You may run Sugarscape either in GUI mode via sim.app.sugarscape.SugarscapeWithUIHigh or in batch mode via sim.app.sugarscape.Sugarscape.
+For either one, the configuration file argument controls what is printed to standard out.
+
 NOTE:  At this moment, only start/anim2-3.sh and start/anim2-2.bat have the correct jar versions specified.  The other scripts need to be updated accordingly. 
 
 You should also be able to run Sugarscape inside an IDE just using the sugarscape.jar and lib/*.jar as the code has been modified to use resources rather files for configuration.
@@ -87,7 +90,23 @@ So let's run a model based on one of the earlier outcomes.
 2.  invoke start/anim2-3.sh (UNIX-based OS) or start/anim2-2.bat (WINDOWS)
 3.  press the play button
 
-You'll notice that, for this outcome configuration, output goes to both graphical windows and the console/terminal.
+You'll notice that, for this outcome configuration, output goes to both graphical windows and the console/terminal.  Printed output should look like (for anim2-3):
+
+run,time,gini,agents_born,alive_agents,avg_vision,avg_metabolism_sugar,avg_metabolism_spice
+1,0.0,0.23,0,250,3.37,2.46,0
+1,10.0,0.33,53,250,3.6,2.28,0
+1,20.0,0.36,97,250,3.86,2.12,0
+1,30.0,0.37,121,250,3.9,2.03,0
+1,40.0,0.38,132,250,3.84,1.98,0
+1,50.0,0.39,150,250,3.83,1.94,0
+(rest omitted)
+
+In the conf file, output is controlled via:
+#stats_out= file or print
+stats_out=print
+
+If set to out, the model writes to a filename that uses the system time (milliseconds since Epoch) as the prefix, and exp as the suffix.  Such as:
+1317921383263.exp
 
 Figure 2-2 (GAS, p. 22) is represented by the executable script start/fig2-2.sh and the configuration file conf/fig2-2.conf .  Some outcomes involved repeated runs and parameter search/sweep, such as Figure 2-5.  In these cases, there are corresponding files in sweep that define:  a) the parameters that will vary across runs, and b) how much each parameter will vary.  Sweeping parameters is directly supported and described later in this document.
 
